@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+
+body {
+
+  font: 18px sans-serif;
+}
+
+#select1{
+  position: absolute;
+  left:100px;
+  top:30px;
+}
+#select2{
+  position: absolute;
+  left:700px;
+  top:30px;
+}
+#select3{
+  position: absolute;
+  left:400px;
+  top:30px;
+}
+#hovlab{
+  position: absolute;
+  left:30px;
+  top:170px;
+}
+#gnotes {
+  position: absolute;
+  left: 280px;
+  top: 680px;
+}
+
+
+.tooltip2{
+   cursor: pointer;
+   position: absolute;
+   /* left: 1100px; */
+   top: 20px;
+
+   height: 40px;
+   width: 50px;
+
+}
+.dc-chart rect.stack1 {
+    stroke: none;
+    fill: red;
+}
+
+.dc-chart rect.stack2 {
+    stroke: none;
+    fill: green;
+}
+
+.tooltip2 .hovertext {
+  visibility: hidden;
+  width: 800px;
+  height: 470px;
+  background-color: lightgrey;
+  color: black;
+  text-align: left;
+  border-radius: 6px;
+  padding: 15px 15px;
+  right: 40px;
+  top: 50px;
+  opacity: 0;
+  transition: opacity 1s;
+  font: 18px sans-serif;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip2:hover .hovertext{
+  visibility: visible;
+  opacity: 1;
+
+}
+
+circle.dot {
+fill-opacity: 1 !important;
+}
+
+#nice2{
+  fill: transparent;
+}
+
+/* #button_char {   position: absolute; left: 30px; font-size: 12px; font-weight: normal; float: left; top:20px /* or whatever */ } */
+#paging { padding-left: 150px; font-size: 12px; font-weight: normal; float: center; }
+#datatest {position:absolute;table-layout: fixed;display: block; left:1100px;} /* GRAB THIS*/
+#button_char {   position: absolute; left: 100px; font-size: 12px; font-weight: normal; float: left; top:10px /* or whatever */ }
+#helpbutton {   position: absolute; right: 100px; font-size: 12px; font-weight: normal; float: left; top:10px /* or whatever */ }
+
+/* #container {margin-top: 100px;/* or whatever */ } */
+
+
+
+</style>
+
+<head>
+    <title>Warehouse ADVISER - Country</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css' integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+</head>
+
+<body   style="font-family: 'Roboto', sans-serif">
+  <div class="w3-container w3-padding-12 w3-light-grey w3-center w3-small" style="position:inherit;top:0px;width:100%;margin: 0;padding:0;display:block">
+    <!-- <img src="../other/stickeroid_5bf57b51e9f17.png" style="width:8%;display: block;margin:auto"> -->
+      <h2 style="font-family: 'Roboto', sans-serif;font-size:20px">Warehouse ADVISER - Country
+      <div id="button_char">
+        <Button title="Home" type="button" class="btn btn-inverse" onclick="window.location.href = '../../home_page.html'">
+          <i class="fas fa-home"></i>
+        </Button>
+        <Button title="Global View" type="button" class="btn btn-primary" onclick="window.location.href = '../Calendar/dc_ex7ppmr2.html'">
+          <i class="fas fa-globe"></i>
+        </Button>
+        <Button title="Restart" type="button" class="btn btn-danger" onclick="window.location.href = 'line_may24_v2.html'">
+          <i class="fas fa-undo"></i>
+        </Button>
+      </div>
+    </h2>
+
+    <div class ="tooltip2" id = "helpbutton"><i style = 'font-size:32px' class='fas fa-question-circle'></i>
+
+      <span class="hovertext">
+        <a style = "font-size: 16px; font-weight: bold; color:black;">PPMR-HIV Reporting by Country:</a>
+        <br>
+        <br>
+        <img src="data/warehouse info.png" class ="quadpic">
+
+        <br>
+    <!-- <a style = "font-size: 16px;color:black; font-weight:bold;">Botswana: </a>Data reported for Central Medical Store, First Reporting Month: May 2019<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Burundi: </a>Data reported for Central Medical Store, First Reporting Month: May 2019<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Cameroon: </a>Data reported for Central Medical Store, First Reporting Month: October 2017<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Cote d'Ivoire: </a>Data reported for Central Medical Store and District Medical Store and Hospitals, First Reporting Month: August 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">DRC: </a>Data reported for 3 PEPFAR Provincial Warehouses, First Reporting Month: September 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">eSwatini: </a>Data reported for Central Medical Store, First Reporting Month: May 2019<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Ghana: </a>Data reported for Central Medical Store and 10 Regional Warehouses, First Reporting Month: September 2017<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Haiti: </a>Data reported for Central Medical Store, First Reporting Month: September 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Lesotho: </a>Data reported for Central Medical Store and Service Delivery Points, First Reporting Month: September 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Mozambique: </a>Data reported for Central Medical Store and 12 Provincial Warehouses, First Reporting Month: February 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Namibia: </a>Data reported for Central Medical Store, First Reporting Month: January 2019<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Nigeria: </a>Data reported for 12 Regional Warehouses, First Reporting Month: March 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Rwanda: </a>Data reported for Central Medical Store, District Pharmacies, and Service Delivery Points, First Reporting Month: September 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Uganda JMS: </a>Data reported for Joint Medical Store (JMS), First Reporting Month: April 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Uganda NMS: </a>Data reported for National Medical Store (NMS), First Reporting Month: April 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Uganda MAUL: </a>Data reported for Medical Access Uganda Limited (MAUL), First Reporting Month: April 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Vietnam: </a>Data reported for Central Medical Store and Service Delivery Points, First Reporting Month: August 2018<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Zambia: </a>Data reported for Central Medical Store, First Reporting Month: August 2017<br>
+    <a style = "font-size: 16px;color:black; font-weight:bold;">Zimbabwe: </a>Data reported for Central Medical Store, First Reporting Month: May 2018<br> -->
+    </span>
+
+    </div>
+    <!-- <p>Powered by <a href="https://www.chemonics.com/" target="_blank" class="w3-hover-text-green">SC-FACT</a><i class="fa fa-ambulance w3-hover-opacity"></i></p> -->
+  </div>
+
+
+
+  <div class="row" id = "row" style = "visibility: hidden;">  <!-- /* GRAB THIS*/-->
+    <table id="datatest" class="table table-striped"style=' width: 25%;right: 30px;top: 130px;overflow: auto;height: 500px;'></table><!-- /* changed overflow:scorll to auto in order to hide the scroll bars. In case more in the future may need to change back */-->
+  </div>
+
+
+
+
+
+<div id = "container">
+  <div id="select1" style="margin-top: 40px;">
+    <div>
+      <!-- <a class='reset'
+         href="javascript:select1.filterAll();dc.redrawAll();d3.select('div#test').style('visibility', 'hidden');d3.select('div#row').style('visibility', 'hidden');"
+         style='visibility: hidden;'>reset</a> -->
+    </div>
+  </div>
+  <div id="select2" style="margin-top: 40px;" onchange="d3.select('div#test').style('visibility', 'visible');d3.select('div#row').style('visibility', 'visible');d3.select('div#gnotes').style('visibility', 'visible');">
+    <div>
+      <!-- <a class='reset'
+         href="javascript:select2.filterAll();dc.redrawAll();d3.select('div#test').style('visibility', 'hidden');d3.select('div#row').style('visibility', 'hidden');"
+         style='visibility: hidden;'>reset</a> -->
+    </div>
+  </div>
+  <div id="select3" style="margin-top: 40px;" >
+    <div>
+      <!-- <a class='reset'
+         href="javascript:select3.filterAll();dc.redrawAll();d3.select('div#test').style('visibility', 'hidden');d3.select('div#row').style('visibility', 'hidden');"
+         style='visibility: hidden;'>reset</a> -->
+    </div>
+  </div>
+
+<!-- <div class="container">
+<script type="text/javascript" src="header.js"></script> -->
+<div id="test" style="visibility: hidden"></div>
+
+<div id="hovlab">Legend: (Hover to see series)</div>
+<div id = "gnotes" style="visibility: hidden;">Note: Q2 Pipeline data is displayed above. Pipeline data is updated quarterly.</div>
+
+<!-- <div id="select1">
+   <div>
+     <a class='reset'
+        href='javascript:select1.filterAll();dc.redrawAll();'
+        style='visibility: hidden;'>reset</a>
+   </div>
+</div> -->
+
+    <script type="text/javascript" src="js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="js/fetch.umd.js"></script>
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/crossfilter.js"></script>
+<script type="text/javascript" src="js/dc.js"></script>
+<script type="text/javascript" src="js/d3-scale-chromatic.js"></script>
+<script type="text/javascript">
+
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
+var clicked_var = getQueryVariable("id")
+var clicked_var_pro = getQueryVariable("id2")
+
+var tick_mark = "No"
+
+var select1 = dc.selectMenu('#select1').promptText('Select Country');
+var select2 = dc.selectMenu('#select2').promptText('Select Product');
+var select3 = dc.selectMenu('#select3').promptText('Select Product Category');
+
+// select1.render();
+
+
+var chart = dc.compositeChart("#test");
+
+var datacharttable = dc.dataTable("#datatest");<!-- /* GRAB THIS*/-->
+
+// chart.on('renderlet', function(chart) {
+//   d3.select('div#test').s tyle('visibility', 'visible');
+// });
+
+
+d3.csv("data/ALL 6-6.csv").then(function(experiments) {
+
+  var formatMillisecond = d3.timeFormat(".%L"),
+      formatSecond = d3.timeFormat(":%S"),
+      formatMinute = d3.timeFormat("%I:%M"),
+      formatHour = d3.timeFormat("%I %p"),
+      formatDay = d3.timeFormat("%a %d"),
+      formatWeek = d3.timeFormat("%b %d"),
+      formatMonth = d3.timeFormat("%b %Y"),
+      formatYear = d3.timeFormat("%Y");
+
+  var parseDate = d3.timeParse("%m/%d/%Y");
+
+  experiments.forEach(function(x) {
+    // x.projMOS = +x.projMOS;
+    // x.AMI = +x.AMI;
+
+    // x.MOS = +x.MOS;
+    // x.projAMI = +x.projAMI;
+    x.Order = +x.Order;
+    x.projOrder = +x.projOrder;
+    x.Date = d3.timeMonth(parseDate(x.Date));
+
+
+    x.mosLow = 3;
+    x.mosHigh = 6;
+
+    // console.log(formatMonth(x.Date))
+    // console.log(d3 .timeMonth(parseDate(x.Date)))
+
+  });
+
+  // create functions to generate averages for any attribute
+  // function reduceAddAvg(attr) {
+  //   return function(p,v) {
+  //
+  //       ++p.count
+  //       p.sums += attr;
+  //       p.averages = (p.count === 0) ? 0 : p.sums/p.count; // gaurd against dividing by zero
+  //
+  //     return p;
+  //   };
+  // }
+  // function reduceRemoveAvg(attr) {
+  //   return function(p,v) {
+  //
+  //       --p.count
+  //       p.sums -= attr;
+  //       p.averages = (p.count === 0) ? 0 : p.sums/p.count;
+  //
+  //     return p;
+  //   };
+  // }
+  // function reduceInitAvg() {
+  //   return {count:0, sums:0, averages:0};
+  // }
+  // mosLow          = dateDimension.group().reduceSum(function (d) {return Math.round(d.mosLow);}),
+  // mosHigh          = dateDimension.group().reduceSum(function (d) {return Math.round(d.mosHigh);}),
+
+
+
+  var ndx                 = crossfilter(experiments),
+      dateDimension       = ndx.dimension(function(d) { return d.Date; }),
+      // mosLow          = dateDimension.group().reduceSum(function (d) {return 3;}),
+      // mosHigh          = dateDimension.group().reduceSum(function (d) {return Math.round(6);}),
+
+      mosHigh          = dateDimension.group().reduce(
+        function (p, v) {
+
+            return p;
+        },
+        function (p, v) {
+
+            return p;
+        },
+        function () {
+            // return {days: 0, total: 0, avg: 0};
+            return 6;
+        }
+    ),
+
+      mosLow          = dateDimension.group().reduce(
+        function (p, v) {
+
+            return p;
+        },
+        function (p, v) {
+
+            return p;
+        },
+        function () {
+            // return {days: 0, total: 0, avg: 0};
+            return Math.round(3);
+        }
+    ),
+      // mosHigh          = dateDimension.group().reduce(reduceAddAvg(3), reduceRemoveAvg(3), reduceInitAvg),
+      // mosByDate           = dateDimension.group().reduceSum(function (d) {  return d.MOS;}),
+      mosByDate           = dateDimension.group().reduceSum(function (d) {
+        if(d.MOS == "0" ){
+          return -0.006;
+        }
+        else{
+          return d.MOS;
+        }  }),
+      mospByDate          = dateDimension.group().reduceSum(function (d) {
+        if(d.projMOS == "0"){
+          return -0.006;
+        }
+        else{
+          return d.projMOS;
+        }  }),
+      amiByDate           = dateDimension.group().reduceSum(function (d) {
+        if(d.AMI == "0" ){
+          return -0.006;
+        }
+        else{
+          return d.AMI;
+        }  }),
+      pamiByDate           = dateDimension.group().reduceSum(function (d) {
+        if(d.projAMI == "0"){
+          return -0.006;
+        }
+        else{
+          return d.projAMI;
+        }  }),
+      orderByDate        = dateDimension.group().reduceSum(function (d) {return Math.round(d.Order);}),
+      porderByDate        = dateDimension.group().reduceSum(function (d) {return Math.round(d.projOrder);}),
+      prodDimension       = ndx.dimension(function(d) { return d.Product; }),
+      dateGroup           = dateDimension.group(),
+      prodGroup           = prodDimension.group(),
+      countryDimension    = ndx.dimension(function(d) { return d.Country; }),
+      countryGroup        = countryDimension.group(),
+      typeDimension    = ndx.dimension(function(d) { return d.Type; }),
+      typeGroup        = typeDimension.group(),
+      // fundDimension       = ndx.dimension(function(d) { return d.Funder; }),
+      // fundGroup       = fundDimension.group();
+      stackGroup       = dateDimension.group().reduce(function(p, v) {
+          p[v.Funder] = (p[v.Funder] || 0) + v.Order;
+          return p;
+      }, function(p, v) {
+          p[v.Funder] = (p[v.Funder] || 0) - v.Order;
+          return p;
+      }, function() {
+          return {};
+      });
+      stackGroup2       = dateDimension.group().reduce(function(p, v) {
+          p[v.Funder] = (p[v.Funder] || 0) + v.projOrder;
+          return p;
+      }, function(p, v) {
+          p[v.Funder] = (p[v.Funder] || 0) - v.projOrder;
+          return p;
+      }, function() {
+          return {};
+      });
+      // console.log(lineGroup)
+// console.log(mosByDate);
+
+console.log(experiments)
+
+      function remove_empty_bins(source_group) {
+          return {
+              all:function () {
+                  return source_group.all().filter(function(d) {
+
+                        return d.value != 0;
+                  });
+              }
+          };
+      }
+
+      function remove_empty_bins_num(source_group) {
+          return {
+              all:function () {
+                  return source_group.all().filter(function(d) {
+
+                        return d.value >= 0.005 || d.value <= -0.005;
+
+                  });
+              }
+          };
+      }
+
+      var mosLow2 = remove_empty_bins(mosLow);
+      var mosHigh2 = remove_empty_bins(mosHigh);
+      var mosByDate2 = remove_empty_bins_num(mosByDate);
+      var mospByDate2 = remove_empty_bins_num(mospByDate);
+      var amiByDate2 = remove_empty_bins_num(amiByDate);
+      var pamiByDate2 = remove_empty_bins_num(pamiByDate);
+      var orderByDate2 = remove_empty_bins(orderByDate);
+      var porderByDate2 = remove_empty_bins(porderByDate);
+      var prodFilt = remove_empty_bins(prodGroup);
+      var countryFilt = remove_empty_bins(countryGroup);
+      var typeFilt = remove_empty_bins(typeGroup);
+      var dateFilt = remove_empty_bins(dateGroup);
+
+
+      // var mosHigh2 = mosHigh;
+      // var mosByDate2 = mosByDate;
+      // var mospByDate2 = mospByDate;
+      // var amiByDate2 = amiByDate;
+      // var pamiByDate2 = pamiByDate;
+      // var orderByDate2 = orderByDate;
+      // var porderByDate2 = porderByDate;
+      // var prodFilt = prodGroup;
+      // var countryFilt = countryGroup;
+      // var typeFilt = typeGroup;
+
+// console.log(ndx);
+
+      // var lineFilt = lineGroup;
+      // var prjFilt = lineprjGroup;
+      // var prodFilt = prodGroup;
+      // var countryFilt = countryGroup;
+      //
+      // lineDimension.filter(function(d){return d != null;})
+      // prodDimension.filter(function(d){return d != null;})
+      // countryDimension.filter(function(d){return d != null;})
+
+      var format = d3.timeFormat("%b %Y");
+      var formatC = d3.format(",");
+
+      select1
+        .dimension(countryDimension)
+        .group(countryFilt)
+        .controlsUseVisibility(true)
+        // .replaceFilter(['DRC'])// temp remove before deploy
+        if(typeof clicked_var !== "undefined")
+        {
+          var clicked_var2 = clicked_var.replace(/^(?:")(.*)(?:")$/,"$1");
+          console.log(clicked_var2)
+          select1.replaceFilter(clicked_var2);
+        }
+        // d3.select('div#test').style('visibility', 'visible'); // temp remove before deploy
+
+      select2
+        .dimension(prodDimension)
+        .group(prodFilt)
+        .controlsUseVisibility(true)
+        // .replaceFilter(['Abacavir/Lamivudine 120/60 mg Dispersible Tablet, 30 Tabs'])// temp remove before deploy
+
+        if(typeof clicked_var_pro !== "undefined")
+        {
+          tick_mark = "yes"
+          var clicked_var2_pro = clicked_var_pro.replace(/^(?:")(.*)(?:")$/,"$1");
+          console.log(clicked_var2_pro);
+          select2.replaceFilter(clicked_var2_pro)
+          select3.replaceFilter(function() {
+            console.log('tehethete')
+            console.log(this)
+            return this[1].value
+          })
+          // select2
+          .on('renderlet', function(chart) {
+            d3.select('div#test').style('visibility', 'visible');
+            d3.select('div#row').style('visibility', 'visible');
+
+          })
+        }
+
+
+        select3
+          .dimension(typeDimension)
+          .group(typeFilt)
+          .controlsUseVisibility(true)
+
+
+
+     //  select1.dimension(lineDimension)
+     // .group(lineGroup)
+     // .controlsUseVisibility(true);
+// chart.filter(null);
+
+function sel_stack(i) {
+    return function(d) {
+        return d.value[i];
+    };
+}
+
+var nice =
+dc.barChart(chart)
+        .dimension(dateDimension)
+        .group(stackGroup, "Orders - USAID", sel_stack("Orders - USAID"))
+        // .colors("grey")
+        .useRightYAxis(true)
+            .centerBar(true)
+            .colors(d3.scaleOrdinal(d3.schemeSet2))
+
+            // .style("opacity",0.5)
+
+var nice2 =
+dc.barChart(chart)
+        .dimension(dateDimension)
+        .group(stackGroup2, "Proj Orders - USAID", sel_stack("Proj Orders - USAID"))
+        // .colors("grey")
+        .useRightYAxis(true)
+            .centerBar(true)
+            .colors(d3.scaleOrdinal(d3.schemePastel2))
+          ;
+
+
+
+nice.stack(stackGroup, "Orders - GF", sel_stack("Orders - GF"));
+nice.stack(stackGroup, "Orders - Other", sel_stack("Orders - Other"));
+nice2.stack(stackGroup2, "Proj Orders - GF", sel_stack("Proj Orders - GF"));
+nice2.stack(stackGroup2, "Proj Orders - Other", sel_stack("Proj Orders - Other"));
+
+var thex = d3.scaleTime();
+thex.ticks(d3.timeMonth.every(1));
+
+
+var grplist = ["Orders - USAID","Orders - GF","Orders - Other","Proj Orders - USAID","Proj Orders - GF","Proj Orders - Other"];
+
+    chart
+        .width(1050)
+        .height(610)
+
+
+  // console.log(d);
+  .title(function(d) {
+  // console.log(d);
+  if(grplist.includes(this.layer)){
+    return this.layer + "\n" + "Date: " + format(d.key) + "\n" + "Value: " + formatC(Math.round(d.value[this.layer]));
+  }
+  else if (d.value>=1000){
+    return this.layer + "\n" + "Date: " + format(d.key) + "\n" + "Value: " + formatC(Math.round(d.value));
+  }
+  else{
+    return this.layer + "\n" + "Date: " + format(d.key) + "\n" + "Value: " + Math.round(d.value*10)/10;
+  }
+//   else {
+// // return "haha";
+//       return "Date: " + Math.round(d.value*10)/10 + "\n" + this.layer;
+//   }
+  // }
+  //
+      // + d.key[1];
+})    // .x(d3.scaleTime().domain([new Date(2018,0,1),new Date(2020,0,1)]))
+        // .x(d3.scaleTime().domain(d3.extent(experiments, function(d){return d.Date;})))
+        // .x(d3.scaleTime())
+        .x(thex)
+
+        // .xUnits(d3.timeMonths)
+        .xUnits(function(){return 30;})
+        // .xAxis()
+
+
+        // .y(d3.scaleLinear().domain([d3.min(experiments,function(d){return +d.MOSact;})-1.1,d3.max(experiments,function(d){return +d.MOSact;})+1.1]))
+
+        .elasticY(true)
+        .elasticX(true)
+        .xAxisPadding(20).xAxisPaddingUnit('day')
+        .yAxisLabel("Months of Stock (MOS)",250)
+        .rightYAxisLabel("Quantity",30)
+          .margins({left: 310, top: 110, right: 110, bottom: 80})
+        .clipPadding(10)
+        .dimension(dateDimension)
+
+
+        // .renderDataPoints(true)
+        .brushOn(false)
+        .legend(dc.legend().x(60).y(200).itemHeight(13).gap(5))
+        .alignYAxes(true)
+        .compose([
+          // dc.barChart(chart)
+          //         .dimension(dateDimension)
+          //         .group(orderByDate2, "Shipments")
+          //         .colors("pink")
+          //         .useRightYAxis(true)
+          //             .centerBar(true),
+          //
+          // dc.barChart(chart)
+          //         .dimension(dateDimension)
+          //         .group(porderByDate2, "Proj Shipments")
+          //         .colors("grey")
+          //         .useRightYAxis(true)
+          //             .centerBar(true),
+
+          nice,
+          nice2,
+
+            dc.lineChart(chart)
+                .dimension(dateDimension)
+                .group(amiByDate2, "AMI/AMC")
+                .colors("black")
+                .useRightYAxis(true),
+
+                // .dashStyle([6,2]),
+                dc.lineChart(chart)
+                    .dimension(dateDimension)
+                    .group(mosByDate2, "Actual MOS")
+                    .colors("purple"),
+
+                dc.lineChart(chart)
+                    .dimension(dateDimension)
+                    .group(pamiByDate2, "Proj AMI/AMC")
+                    .colors("black")
+                    .useRightYAxis(true)
+                    .dashStyle([6,2]),
+
+            // dc.scatterPlot(chart)
+            //     .group(scatterGroup, "Red Group")
+            //     .colors("red"),
+                // .valueAccessor(function (d) { return d.key[1] + 8; }),
+
+                // .dashStyle([6,2]),
+
+            dc.lineChart(chart)
+                .dimension(dateDimension)
+                .group(mospByDate2, "Proj MOS")
+                .colors("purple")
+                .dashStyle([4,4]),
+
+                dc.lineChart(chart)
+                    .dimension(dateDimension)
+                    .group(mosLow2, "MOS = 3")
+                    .colors("red")
+                    .dashStyle([4,4])
+                    .dotRadius(0),
+
+
+
+                    dc.lineChart(chart)
+                        .dimension(dateDimension)
+                        .group(mosHigh2, "MOS = 6")
+                        .colors("orange")
+                        .dashStyle([4,4])
+                        .dotRadius(0),
+
+
+                // .defined(function(d) { return lineGroup != null;}),
+
+
+
+
+        ]);
+
+var xAxis = chart.xAxis().ticks(d3.timeMonth.every(1)).tickFormat(format);
+
+        var fmt = d3.format('02d');
+        var runDimension = ndx.dimension(function(d) {return [fmt(+d.Country),(d.Date),fmt(+d.Product),fmt(+d.Note)];})
+        var grouping = function (d) {return d.Facility;}
+        // var grouping2 = remove_empty_bins_row(grouping);
+
+        // var lineTip = d3.tip()
+        //                  .attr('class', 'd3-tip')
+        //                  .offset([-10, 0])
+        //                  .html(function (d) { return "<span style='color: #f0027f'>" + d.Date + "</span> : " + numberFormat(d.AMI);});
+        //
+        datacharttable
+          .width(300)
+          .height(480)
+          .dimension(runDimension)
+          .group(grouping)
+          .size(Infinity)
+          .showGroups(false)
+          // .columns(['Country','Date','Product','Note'])
+          .columns([
+              // {
+              //     label: "Country",
+              //     format: function (d) { return d.Country; }
+              // },
+              {
+                  label: "Date",
+                  format: function (d) { return format(d.Date); }
+              },
+              // {
+              //     label: "Product",
+              //     format: function (d) { return d.Product; }
+              // },
+              {
+                  label: "Note",
+                  format: function (d) { return d.Note; }
+              }
+          ])
+          .sortBy(function (d) {return [fmt(+d.Note),fmt(+d.Date)]; })
+          .order(d3.descending)
+
+          .on('renderlet', function(chart) { // removes extra notes and spaces
+              chart.selectAll("div#row tr").filter(function(d) {
+                // console.log('lll')
+                // console.log(d)
+                return d.Note == ""
+                // return this.id.match(/foo/).length > 0;
+              }).remove()
+          })
+
+
+
+
+
+        // var lineTip = d3.tip()
+        //                  .attr('class', 'd3-tip')
+        //                  .offset([-10, 0])
+        //                  .html(function (d) { return "<span style='color: #f0027f'>" + d.Date + "</span> : " + numberFormat(d.AMI);});
+        //
+
+        chart.renderlet(function (chart) {
+                    chart.selectAll("g.x text")
+                      // .attr('dx', '-10')
+                      .attr('dy', "0.71em")
+                      .attr('transform', "rotate(-35)")
+                      .attr("text-anchor", "end");
+                });
+
+                chart.renderlet(function (chart) {
+                  chart.selectAll("circle").filter(function(d) {
+                    // console.log('jhsdj')
+                    if (d.data.value <0){
+                      // console.log(d.y)
+                      // console.log(d)
+                    }
+
+                    return d.data.value <0
+                    // return this.id.match(/foo/).length > 0;
+                  })
+                  // .attr('cy',220)
+                });
+
+
+
+
+dc.renderAll();
+  // chart.render();
+  d3.selectAll('div#select2 select').style('width','600px'); //increase sie of the product select menu
+
+
+
+
+
+
+});
+</script>
+
+</div>
+</body>
+</html>

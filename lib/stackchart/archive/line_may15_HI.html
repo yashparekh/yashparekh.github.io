@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+
+body {
+
+  font: 18px sans-serif;
+}
+
+#select1{
+  position: absolute;
+  left:100px;
+  top:30px;
+}
+#select2{
+  position: absolute;
+  left:400px;
+  top:30px;
+}
+#select3{
+  position: absolute;
+  left:700px;
+  top:30px;
+}
+#hovlab{
+  position: absolute;
+  left:30px;
+  top:170px;
+}
+#button_char {   position: absolute; left: 30px; font-size: 12px; font-weight: normal; float: left; top:20px /* or whatever */ }
+#paging { padding-left: 150px; font-size: 12px; font-weight: normal; float: center; }
+#datatest {position:absolute;table-layout: fixed;display: block;} /* GRAB THIS*/
+</style>
+
+<head>
+    <title>dc.js - Scatter Composite with Legend</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+</head>
+<body>
+
+  <div id="button_char">
+    <Button type="button" class="btn btn-primary" onclick="window.location.href = '../../home_page.html'">
+      <i class="fas fa-home"></i>
+    </Button>
+  </div>
+
+
+
+<div id = "container">
+  <div id="select1">
+    <div>
+      <a class='reset'
+         href='javascript:select1.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select2">
+    <div>
+      <a class='reset'
+         href='javascript:select2.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select3">
+    <div>
+      <a class='reset'
+         href='javascript:select3.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">  <!-- /* GRAB THIS*/-->
+  <table id="datatest" class="table table-striped"style='width: 25%;right: 30px;top: 130px;overflow: scroll;height: 500px;'></table><!-- /* GRAB THIS*/-->
+</div><!-- /* GRAB THIS*/-->
+
+<!-- <div class="container">
+<script type="text/javascript" src="header.js"></script> -->
+<!-- <div id="test" style="visibility: hidden"></div> -->
+<div id="test"></div>
+
+<div id="hovlab">Legend: (Hover to see series)</div>
+
+<!-- <div id="select1">
+   <div>
+     <a class='reset'
+        href='javascript:select1.filterAll();dc.redrawAll();'
+        style='visibility: hidden;'>reset</a>
+   </div>
+</div> -->
+
+    <script type="text/javascript" src="js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="js/fetch.umd.js"></script>
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/crossfilter.js"></script>
+<script type="text/javascript" src="js/dc.js"></script>
+<script type="text/javascript">
+
+var select1 = dc.selectMenu('#select1').promptText('Select Country');
+var select2 = dc.selectMenu('#select2').promptText('Select Product');
+var select3 = dc.selectMenu('#select3').promptText('Select Product Category');
+
+// select1.render();
+
+
+var chart = dc.compositeChart("#test");
+
+var datacharttable = dc.dataTable("#datatest");<!-- /* GRAB THIS*/-->
+
+
+
+d3.csv("data/data_5-20_2.csv").then(function(experiments) {
+
+  var formatMillisecond = d3.timeFormat(".%L"),
+      formatSecond = d3.timeFormat(":%S"),
+      formatMinute = d3.timeFormat("%I:%M"),
+      formatHour = d3.timeFormat("%I %p"),
+      formatDay = d3.timeFormat("%a %d"),
+      formatWeek = d3.timeFormat("%b %d"),
+      formatMonth = d3.timeFormat("%b %Y"),
+      formatYear = d3.timeFormat("%Y");
+
+  var parseDate = d3.timeParse("%m/%d/%Y");
+
+  experiments.forEach(function(x) {
+    x.MOS = +x.MOS;
+    x.projMOS = +x.projMOS;
+    x.AMI = +x.AMI;
+    x.projAMI = +x.projAMI;
+    x.Order = +x.Order;
+    x.projOrder = +x.projOrder;
+    x.Date = d3.timeMonth(parseDate(x.Date));
+    x.mosLow = 3;
+    x.mosHigh = 6;
+
+    // console.log(formatMonth(x.Date))
+    // console.log(d3 .timeMonth(parseDate(x.Date)))
+
+  });
+
+console.log(experiments)
+
+  var ndx                 = crossfilter(experiments),
+      dateDimension       = ndx.dimension(function(d) { return d.Date; }),
+      mosLow          = dateDimension.group().reduceSum(function (d) {return Math.round(d.mosLow);}),
+      mosHigh          = dateDimension.group().reduceSum(function (d) {return Math.round(d.mosHigh);}),
+      mosByDate           = dateDimension.group().reduceSum(function (d) {return Math.round(d.MOS);}),
+      mospByDate          = dateDimension.group().reduceSum(function (d) {return Math.round(d.projMOS);}),
+      amiByDate           = dateDimension.group().reduceSum(function (d) {return Math.round(d.AMI);}),
+      pamiByDate           = dateDimension.group().reduceSum(function (d) {return Math.round(d.projAMI);}),
+      orderByDate        = dateDimension.group().reduceSum(function (d) {return Math.round(d.Order);}),
+      porderByDate        = dateDimension.group().reduceSum(function (d) {return Math.round(d.projOrder);}),
+      prodDimension       = ndx.dimension(function(d) { return d.Product; }),
+      prodGroup           = prodDimension.group(),
+      countryDimension    = ndx.dimension(function(d) { return d.Country; }),
+      countryGroup        = countryDimension.group(),
+      typeDimension    = ndx.dimension(function(d) { return d.Type; }),
+      typeGroup        = typeDimension.group();
+      // console.log(lineGroup)
+
+      function remove_empty_bins(source_group) {
+          return {
+              all:function () {
+                  return source_group.all().filter(function(d) {
+                      return d.value != 0;
+                  });
+              }
+          };
+      }
+
+      var mosLow2 = remove_empty_bins(mosLow);
+      var mosHigh2 = remove_empty_bins(mosHigh);
+      var mosByDate2 = remove_empty_bins(mosByDate);
+      var mospByDate2 = remove_empty_bins(mospByDate);
+      var amiByDate2 = remove_empty_bins(amiByDate);
+      var pamiByDate2 = remove_empty_bins(pamiByDate);
+      var orderByDate2 = remove_empty_bins(orderByDate);
+      var porderByDate2 = remove_empty_bins(porderByDate);
+      var prodFilt = remove_empty_bins(prodGroup);
+      var countryFilt = remove_empty_bins(countryGroup);
+      var typeFilt = remove_empty_bins(typeGroup);
+// console.log(ndx);
+
+      // var lineFilt = lineGroup;
+      // var prjFilt = lineprjGroup;
+      // var prodFilt = prodGroup;
+      // var countryFilt = countryGroup;
+      //
+      // lineDimension.filter(function(d){return d != null;})
+      // prodDimension.filter(function(d){return d != null;})
+      // countryDimension.filter(function(d){return d != null;})
+
+      var format = d3.timeFormat("%b %Y");
+
+      select1
+        .dimension(countryDimension)
+        .group(countryFilt)
+        .controlsUseVisibility(true);
+
+      select2
+        .dimension(prodDimension)
+        .group(prodFilt)
+        .controlsUseVisibility(true);
+
+        select3
+          .dimension(typeDimension)
+          .group(typeFilt)
+          .controlsUseVisibility(true);
+
+          console.log(select1)
+
+     //  select1.dimension(lineDimension)
+     // .group(lineGroup)
+     // .controlsUseVisibility(true);
+
+
+    chart
+        .width(1050)
+        .height(650)
+
+  // console.log(d);
+  .title(function(d) {
+  // console.log(d);
+  return "Date: " + format(d.key) + "\n" +
+      "Value: " + Math.round(d.value*10)/10;
+})
+        // .x(d3.scaleTime().domain([new Date(2018,0,1),new Date(2020,0,1)]))
+        // .x(d3.scaleTime().domain(d3.extent(experiments, function(d){return d.Date;})))
+        .x(d3.scaleTime())
+        // .xUnits(d3.timeMonths)
+        .xUnits(function(){return 60;})
+
+        // .y(d3.scaleLinear().domain([d3.min(experiments,function(d){return +d.MOSact;})-1.1,d3.max(experiments,function(d){return +d.MOSact;})+1.1]))
+
+        .elasticY(true)
+        .elasticX(true)
+        .xAxisPadding(20).xAxisPaddingUnit('day')
+        .yAxisLabel("Months of Stock (MOS)",250)
+        .rightYAxisLabel("Quantity",30)
+          .margins({left: 310, top: 110, right: 110, bottom: 20})
+        .clipPadding(10)
+        .dimension(dateDimension)
+
+
+        // .renderDataPoints(true)
+        .brushOn(false)
+        .legend(dc.legend().x(60).y(200).itemHeight(13).gap(5))
+        .alignYAxes(true)
+
+        // .on('postRedraw', function(chart) {
+        //   d3.select('div#test').style('visibility', 'visible')})
+
+        .compose([
+          dc.barChart(chart)
+                  .dimension(dateDimension)
+                  .group(orderByDate2, "Shipments")
+                  .colors("pink")
+                  .useRightYAxis(true)
+                      .centerBar(true),
+
+          dc.barChart(chart)
+                  .dimension(dateDimension)
+                  .group(porderByDate2, "Proj Shipments")
+                  .colors("grey")
+                  .useRightYAxis(true)
+                      .centerBar(true),
+
+            dc.lineChart(chart)
+                .dimension(dateDimension)
+                .group(amiByDate2, "AMI/AMC")
+                .colors("blue")
+                .useRightYAxis(true),
+                // .dashStyle([6,2]),
+
+
+                dc.lineChart(chart)
+                    .dimension(dateDimension)
+                    .group(pamiByDate2, "Proj AMI/AMC")
+                    .colors("blue")
+                    .useRightYAxis(true)
+                    .dashStyle([6,2]),
+
+            // dc.scatterPlot(chart)
+            //     .group(scatterGroup, "Red Group")
+            //     .colors("red"),
+                // .valueAccessor(function (d) { return d.key[1] + 8; }),
+            dc.lineChart(chart)
+                .dimension(dateDimension)
+                .group(mosByDate2, "Actual MOS")
+                .colors("green"),
+                // .dashStyle([6,2]),
+
+            dc.lineChart(chart)
+                .dimension(dateDimension)
+                .group(mospByDate2, "Proj MOS")
+                .colors("green")
+                .dashStyle([4,4]),
+
+                dc.lineChart(chart)
+                    .dimension(dateDimension)
+                    .group(mosLow2, "Min MOS = 3")
+                    .colors("red")
+                    .dashStyle([4,4]),
+
+                    dc.lineChart(chart)
+                        .dimension(dateDimension)
+                        .group(mosHigh2, "Max MOS = 6")
+                        .colors("orange")
+                        .dashStyle([4,4])
+                // .defined(function(d) { return lineGroup != null;}),
+
+
+
+
+        ]);
+
+        <!-- /* GRAB ALLTHIS*/-->
+        var fmt = d3.format('02d');
+        var runDimension = ndx.dimension(function(d) {return [fmt(+d.Country),(d.Date),fmt(+d.Product),fmt(+d.Note)];})
+        grouping = function (d) {return d.Facility;}
+        // var lineTip = d3.tip()
+        //                  .attr('class', 'd3-tip')
+        //                  .offset([-10, 0])
+        //                  .html(function (d) { return "<span style='color: #f0027f'>" + d.Date + "</span> : " + numberFormat(d.AMI);});
+        //
+        datacharttable
+          .width(300)
+          .height(480)
+          .dimension(runDimension)
+          .group(grouping)
+          .size(Infinity)
+          .showGroups(false)
+          // .columns(['Country','Date','Product','Note'])
+          .columns([
+              {
+                  label: "Country",
+                  format: function (d) { return d.Country; }
+              },
+              {
+                  label: "Date",
+                  format: function (d) { return format(d.Date); }
+              },
+              {
+                  label: "Product",
+                  format: function (d) { return d.Product; }
+              },
+              {
+                  label: "Note",
+                  format: function (d) { return d.Note; }
+              }
+          ])
+          .sortBy(function (d) { return [fmt(+d.Country),fmt(+d.Date),fmt(+d.Product),fmt(+d.Note)]; })
+          .order(d3.descending)
+<!-- /* GRAB THIS*/-->
+
+
+dc.renderAll();
+  // chart.render();
+
+
+});
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Scatter Composite with Legend</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+</head>
+<body>
+<div id = "container">
+  <div id="select1">
+    <div>
+      <a class='reset'
+         href='javascript:select1.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select2">
+    <div>
+      <a class='reset'
+         href='javascript:select2.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select3">
+    <div>
+      <a class='reset'
+         href='javascript:select3.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+
+<!-- <div class="container">
+<script type="text/javascript" src="header.js"></script> -->
+<div id="test"></div>
+
+<!-- <div id="select1">
+   <div>
+     <a class='reset'
+        href='javascript:select1.filterAll();dc.redrawAll();'
+        style='visibility: hidden;'>reset</a>
+   </div>
+</div> -->
+
+    <script type="text/javascript" src="js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="js/fetch.umd.js"></script>
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/crossfilter.js"></script>
+<script type="text/javascript" src="js/dc.js"></script>
+<script type="text/javascript">
+
+var select1 = dc.selectMenu('#select1');
+var select2 = dc.selectMenu('#select2');
+var select3 = dc.selectMenu('#select3');
+
+
+// select1.render();
+
+
+var chart = dc.compositeChart("#test");
+
+
+
+
+d3.csv("Book7.csv").then(function(experiments) {
+
+  var formatMillisecond = d3.timeFormat(".%L"),
+      formatSecond = d3.timeFormat(":%S"),
+      formatMinute = d3.timeFormat("%I:%M"),
+      formatHour = d3.timeFormat("%I %p"),
+      formatDay = d3.timeFormat("%a %d"),
+      formatWeek = d3.timeFormat("%b %d"),
+      formatMonth = d3.timeFormat("%b %Y"),
+      formatYear = d3.timeFormat("%Y");
+
+  var parseDate = d3.timeParse("%m/%d/%Y");
+
+  experiments.forEach(function(x) {
+    x.MOS = +x.MOSact;
+    // x.MOSproj = +x.MOSproj;
+    x.SOH = +x.SOH;
+    x.AMI = +x.AMI;
+    x.Date = d3.timeMonth(parseDate(x.Date));
+    // console.log(formatMonth(x.Date))
+    // console.log(d3.timeMonth(parseDate(x.Date)))
+  });
+
+  console.log(experiments)
+
+  var ndx                 = crossfilter(experiments),
+      lineDimension       = ndx.dimension(function(d) { return d.Date; }),
+      lineGroup           = lineDimension.group().reduceSum(function (d) {return d.MOS;}),
+      lineprjGroup        = lineDimension.group().reduceSum(function (d) {return d.AMI;}),
+      prodDimension       = ndx.dimension(function(d) { return d.Product; }),
+      prodGroup           = prodDimension.group(),
+      countryDimension    = ndx.dimension(function(d) { return d.Country; }),
+      countryGroup        = countryDimension.group();
+
+      console.log(lineGroup)
+
+      function remove_empty_bins(source_group) {
+          return {
+              all:function () {
+                  return source_group.all().filter(function(d) {
+                      return d.value != 0;
+                  });
+              }
+          };
+      }
+
+      var lineFilt = remove_empty_bins(lineGroup);
+      var prjFilt = remove_empty_bins(lineprjGroup);
+      var prodFilt = remove_empty_bins(prodGroup);
+      var countryFilt = remove_empty_bins(countryGroup);
+
+// console.log(ndx);
+
+      // var lineFilt = lineGroup;
+      // var prjFilt = lineprjGroup;
+      // var prodFilt = prodGroup;
+      // var countryFilt = countryGroup;
+      //
+      // lineDimension.filter(function(d){return d != null;})
+      // prodDimension.filter(function(d){return d != null;})
+      // countryDimension.filter(function(d){return d != null;})
+
+      select1
+        .dimension(countryDimension)
+        .group(countryFilt)
+        .controlsUseVisibility(true);
+      select2
+        .dimension(prodDimension)
+        .group(prodFilt)
+        .controlsUseVisibility(true);
+        select3
+          .dimension(prodDimension)
+          .group(prodFilt)
+          .controlsUseVisibility(true);
+
+     //  select1.dimension(lineDimension)
+     // .group(lineGroup)
+     // .controlsUseVisibility(true);
+
+
+
+
+
+    chart
+        .width(1000)
+        .height(600)
+        // .x(d3.scaleTime().domain([new Date(2018,0,1),new Date(2020,0,1)]))
+        // .x(d3.scaleTime().domain(d3.extent(experiments, function(d){return d.Date;})))
+        .x(d3.scaleTime())
+        // .xUnits(d3.timeMonths)
+        .xUnits(function(){return 60;})
+
+        // .y(d3.scaleLinear().domain([d3.min(experiments,function(d){return +d.MOSact;})-1.1,d3.max(experiments,function(d){return +d.MOSact;})+1.1]))
+
+        .elasticY(true)
+        .elasticX(true)
+        .xAxisPadding(20).xAxisPaddingUnit('day')
+        .yAxisLabel("MOS")
+        .rightYAxisLabel("AMI")
+          .margins({left: 60, top: 60, right: 80, bottom: 20})
+        .clipPadding(10)
+        .dimension(lineDimension)
+
+        // .renderDataPoints(true)
+        .brushOn(false)
+        .legend(dc.legend().x(760).y(0).itemHeight(13).gap(5))
+        .alignYAxes(true)
+        .compose([
+            dc.lineChart(chart)
+                .dimension(lineDimension)
+                .group(prjFilt, "AMI")
+                .colors("blue")
+                .useRightYAxis(true)
+                .dashStyle([6,2]),
+            // dc.scatterPlot(chart)
+            //     .group(scatterGroup, "Red Group")
+            //     .colors("red"),
+                // .valueAccessor(function (d) { return d.key[1] + 8; }),
+            dc.lineChart(chart)
+                .dimension(lineDimension)
+                .group(lineFilt, "Actual MOS")
+                .colors("green")
+                .useRightYAxis(false)
+                .dashStyle([6,2]),
+                // .defined(function(d) { return lineGroup != null;}),
+
+            dc.barChart(chart)
+                    .dimension(lineDimension)
+                    .group(lineFilt, "Shipments")
+                    .colors("orange")
+                        .centerBar(true)
+
+
+        ]);
+
+dc.renderAll();
+  // chart.render();
+
+
+});
+</script>
+
+</div>
+</body>
+</html>

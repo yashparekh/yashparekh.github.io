@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Scatter Composite with Legend</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+</head>
+<body>
+<div id = "container">
+  <div id="select1">
+    <div>
+      <a class='reset'
+         href='javascript:select1.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select2">
+    <div>
+      <a class='reset'
+         href='javascript:select2.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+
+<!-- <div class="container">
+<script type="text/javascript" src="header.js"></script> -->
+<div id="test"></div>
+
+<!-- <div id="select1">
+   <div>
+     <a class='reset'
+        href='javascript:select1.filterAll();dc.redrawAll();'
+        style='visibility: hidden;'>reset</a>
+   </div>
+</div> -->
+
+    <script type="text/javascript" src="js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="js/fetch.umd.js"></script>
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/crossfilter.js"></script>
+<script type="text/javascript" src="js/dc.js"></script>
+<script type="text/javascript">
+
+var select1 = dc.selectMenu('#select1');
+var select2 = dc.selectMenu('#select2');
+
+// select1.render();
+
+
+var chart = dc.compositeChart("#test");
+
+
+
+
+d3.csv("mike3.csv").then(function(experiments) {
+
+  var parseDate = d3.timeParse("%m/%d/%Y");
+
+  experiments.forEach(function(x) {
+    x.MOSact = +x.MOSact;
+    x.MOSproj = +x.MOSproj;
+    x.Date = parseDate(x.Date);
+  });
+
+  console.log(experiments)
+
+  var ndx                 = crossfilter(experiments),
+      lineDimension       = ndx.dimension(function(d) { return d.Date; }),
+      lineGroup           = lineDimension.group().reduceSum(function (d) {return d.MOSact;}),
+      lineprjGroup        = lineDimension.group().reduceSum(function (d) {return d.MOSproj;}),
+      prodDimension       = ndx.dimension(function(d) { return d.Product; }),
+      countryDimension    = ndx.dimension(function(d) { return d.Country; });
+
+      select1
+        .dimension(countryDimension)
+        .group(countryDimension.group())
+        .controlsUseVisibility(true);
+      select2
+        .dimension(prodDimension)
+        .group(prodDimension.group())
+        .controlsUseVisibility(true);
+
+     //  select1.dimension(lineDimension)
+     // .group(lineGroup)
+     // .controlsUseVisibility(true);
+
+
+
+    chart
+        .width(768)
+        .height(480)
+        // .x(d3.scaleTime().domain([new Date(2018,0,1),new Date(2020,0,1)]))
+        // .x(d3.scaleTime().domain(d3.extent(experiments, function(d){return d.Date;})))
+        .x(d3.scaleTime())
+        // .y(d3.scaleLinear().domain([d3.min(experiments,function(d){return +d.MOSact;})-1.1,d3.max(experiments,function(d){return +d.MOSact;})+1.1]))
+        .elasticX(true)
+        .elasticY(true)
+        .yAxisLabel("MOS")
+        .rightYAxisLabel("AMI")
+          .margins({left: 60, top: 80, right: 80, bottom: 20})
+        .clipPadding(10)
+        .dimension(lineDimension)
+        .brushOn(false)
+        .legend(dc.legend().x(600).y(50).itemHeight(13).gap(5))
+        .alignYAxes(true)
+        .compose([
+            dc.lineChart(chart)
+                .dimension(lineDimension)
+                .group(lineprjGroup, "AMI")
+                .colors("blue")
+                .useRightYAxis(true),
+            // dc.scatterPlot(chart)
+            //     .group(scatterGroup, "Red Group")
+            //     .colors("red"),
+                // .valueAccessor(function (d) { return d.key[1] + 8; }),
+            dc.lineChart(chart)
+                .dimension(lineDimension)
+                .group(lineGroup, "Actual MOS")
+                .colors("green"),
+
+            dc.barChart(chart)
+                    .dimension(lineDimension)
+                    .group(lineGroup, "Shipments")
+                    .colors("orange")
+
+        ]);
+
+dc.renderAll();
+  // chart.render();
+
+
+});
+</script>
+
+</div>
+</body>
+</html>

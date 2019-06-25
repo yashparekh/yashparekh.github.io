@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <meta charset="UTF-8">
+  <title>Warehouse ADVISER - Global</title>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/dc.css" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+  <!-- Semantic UI CSS -->
+  <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.css" /> -->
+  <!-- <script
+			  src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkairrx6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+
+  <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+/* html *
+{
+   font-size: 1.0em !important;
+} */
+  .heat-box {
+    stroke: #E6E6E6;
+    stroke-width: 2px;
+  }
+  /* .cols {
+    fill:green;
+    font: 50px;
+    font-size:500px
+  } */
+  .dc-chart g.row text {
+  fill: black;
+  font-size: 12px;
+}
+
+.aspectwrapper {
+  display: inline-block; /* shrink to fit */
+  width: 100%;           /* whatever width you like */
+  position: relative;    /* so .content can use position: absolute */
+}
+.aspectwrapper::after {
+  padding-top: 56.25%; /* percentage of containing block _width_ */
+  display: block;
+  content: '';
+}
+.content {
+  position: absolute;
+  top: 0; bottom: 0; right: 0; left: 0;  /* follow the parent's edges */
+  outline: thin dashed green;            /* just so you can see the box */
+}
+
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
+}
+
+
+.grid .tick {
+    stroke: lightgrey;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
+}
+  /* .dc-chart text {
+    fill: red;
+  } */
+  .tooltip2 .hovertext {
+    visibility: hidden;
+    width: 800px;
+    height: 470px;
+    background-color: lightgrey;
+    color: black;
+    text-align: left;
+    border-radius: 6px;
+    padding: 15px 15px;
+    right: 40px;
+    top: 50px;
+    opacity: 0;
+    transition: opacity 1s;
+    font: 18px sans-serif;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+
+  .tooltip2:hover .hovertext{
+    visibility: visible;
+    opacity: 1;
+
+  }
+</style>
+<style>
+#heat-chart  {font-size: 14px; font-weight: normal;margin-top: 20px; padding-left: 10px;}
+#heat-chart22  {font-size: 14px; font-weight: normal;margin-top: 20px; padding-left: 10px;}
+#heat-chart22beh  {font-size: 14px; font-weight: normal;margin-top: 20px; padding-left: 10px;}
+#helpbutton {   position: absolute; right: 100px; font-size: 12px; font-weight: normal; float: left; top:10px /* or whatever */ }
+
+
+#legend_div  {font-size: 14px; font-weight: normal;margin-top: 0px; margin-left:350px;}
+
+     /* #heat-chart { padding-left: 100px; font-size: 14px; font-weight: normal; float: right;margin-top: 20px } */
+     #heat-chart-axis { padding-left: 10px; font-size: 12px; font-weight: normal; float: right;margin-top: 20px }
+     #line-chart {   padding-left: 10px; font-size: 12px; font-weight: normal; float: right; }
+     #strong_char {   position: absolute; left: 130px; font-size: 12px; font-weight: normal; margin-bottom: 20px; /* or whatever */ }
+   #button_char {   position: relative; left: 100px; font-size: 12px; font-weight: normal; float: left;  /* or whatever */ }
+     /* #button_char2 {   position: absolute; right: 130px; font-size: 12px; font-weight: normal; float: right; top:250px /* or whatever */ } */
+</style>
+<div class ="tooltip2" id = "helpbutton"><i style = 'font-size:32px' class='fas fa-question-circle'></i>
+
+  <span class="hovertext">
+    <a style = "font-size: 16px; font-weight: bold; color:black;">PPMR-HIV Reporting by Country:</a>
+    <br>
+    <br>
+    <img src="warehouse info.png" class ="quadpic">
+    <br>
+</span>
+</div>
+<body  style="overflow-x: hidden;font-family: 'Roboto', sans-serif">
+  <div class="w3-container w3-padding-12 w3-light-grey w3-center w3-small" style="position:inherit;top:0px;width:100%;margin: 0;padding:0;display:block">
+    <!-- <img src="../other/stickeroid_5bf57b51e9f17.png" style="width:8%;display: block;margin:auto"> -->
+      <h2 style="font-family: 'Roboto', sans-serif;font-size:20px">Warehouse ADVISER - Global
+      <div id="button_char">
+        <Button title="Home" type="button " class="btn btn-inverse" onclick="window.location.href = '../../home_page.html'">
+          <i class="fas fa-home"></i>
+        </Button>
+        <Button title="Country View" type="button" class="btn btn-primary" onclick="window.location.href = '../stackchart/line_jun7.html'">
+          <i class="fa fa-flag"></i>
+        </Button>
+      </div>
+    </h2>
+    <!-- <p>Powered by <a href="https://www.chemonics.com/" target="_blank" class="w3-hover-text-green">SC-FACT</a><i class="fa fa-ambulance w3-hover-opacity"></i></p> -->
+  </div>
+
+  <!-- <p>Powered by <a href="https://www.chemonics.com/" target="_blank" class="w3-hover-text-green">SC-FACT</a><i class="fa fa-ambulance w3-hover-opacity"></i></p> -->
+
+
+    <!-- <div id="button_char2">
+<Button type="button" class="btn btn-primary" OnClick="javascript:heatChart.filterAll();dc.redrawAll();">
+<i class="fas fa-undo"></i>
+</Button>
+</div> -->
+
+
+    <div class="svg-container" id="heat-chart" style="overflow-y: scroll;height:450px;" >
+      <!-- <a class="reset" href="javascript:heatChart.filterAll();dc.redrawAll();" style="display: none;">reset</a> -->
+      <!-- <div class="clearfix"></div> -->
+    </div>
+
+    <div class="svg-container" id="heat-chart22beh">
+    </div>
+
+
+<!--
+  <div class="svg-container" id="heat-chart22" >
+
+<svg width="1700" height="400">
+  <g class="heatmap" transform="translate(430,20)">
+  <g class="cols axis">
+    <text x="47" style="text-anchor: middle;font-size:16px;" y="13.5" dy="12" transform="rotate(-4 0 0)">Botswana</text>
+    <text x="131" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Burundi</text>
+    <text x="215" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Cameroon</text>
+    <text x="299" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Cote d'Ivoire</text>
+    <text x="383" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">DRC</text>
+    <text x="467" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Ghana</text>
+    <text x="551" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Haiti</text>
+    <text x="635" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Lesotho</text>
+    <text x="719" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Malawi</text>
+      <text x="803" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Mozambique</text>
+      <text x="887" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Namibia</text>
+      <text x="971" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Nigeria</text>
+      <text x="1055" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Rwanda</text>
+      <text x="1139" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Zambia</text>
+      <text x="1223" style="text-anchor: middle;font-size:16px;" y="5960" dy="12" transform="translate(0, -5973.5 )">Zimbabwe</text>
+  </g>
+</g>
+</svg>
+</div> -->
+<div id="legend_div">
+  <p>Hover over each box to learn about the reporting country, selected
+    product, inventory date, and Months of Stock (MOS).<br/>Warehouse ADVISER
+    Dashboard uses historical average monthly consumption (hAMC) to calculate
+    MOS, whereas the FLARE table for Adult ARVs uses Latest Month Issues 
+    (LMI) to calculate MOS. <br/>Click on box to Drill down to Country View for the selected product.<br/>
+    Abbreviations: UG1 = Uganda-JMS, UG2 = Uganda-MAUL, UG3 = Uganda-NMS<br/><br/>Legend:
+  </p>
+  <svg id="legend" left: '400px' height=30 width=1200></svg>
+</div>
+
+<!-- <div class='test_class'> -->
+  <!-- <div class="svg-container" id="heat-chart22"> -->
+
+
+
+    <!-- <div id="heat-chart-axis">
+
+      <div class="clearfix"></div>
+    </div> -->
+
+
+    <!-- <div id="line-chart">
+      <div class="ui divider"></div>
+      <strong>Line Chart</strong> ()
+      <a class="reset" href="javascript:lineChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+      <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div> -->
+    <!-- <div>
+        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+    </div> -->
+  <!-- </div> -->
+
+
+
+  <script type="text/javascript" src="js/promise-polyfill.js"></script>
+  <script type="text/javascript" src="js/fetch.umd.js"></script>
+  <script type="text/javascript" src="js/d3.js"></script>
+  <script type="text/javascript" src="js/crossfilter.js"></script>
+  <script type="text/javascript" src="js/dc.js"></script>
+
+<script src="Master_Filejsimpo.js"></script>
+
+  <script type="text/javascript">
+
+  function loadPage(d){
+
+// new_loc = "file:///C:/Users/HarrisIqbal/Documents/WareHouse_Adviser%20Tool/lib/Calendar/dc_ex7ppmr2.html?id="+d
+window.location.href =  '../stackchart/line_jun7.html?id='+d[0]+'&id2='+d[1]
+  };
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
+// console.log(JSON.stringify(window.location.pathname))
+// console.log(getQueryVariable(JSON.stringify(window.location.pathname)))
+
+// if (getQueryVariable("id") == null){
+//   console.log('yes')
+// } else {
+//   console.log('no')
+// }
+var format = d3.timeFormat("%b %Y")
+
+
+var clicked_var = getQueryVariable("id")
+console.log(clicked_var)
+
+console.log('hello')
+console.log(csv_import)
+
+var csv = csv_import
+
+    var heatChart = dc.heatMap("#heat-chart");
+
+    var data;
+    // d3.csv('Master_File.8.csv').then(function(csv) { / commented out in order to pull in as js
+
+      // console.log(csv)
+      // csv = csv.filter(function(d) { return d["Period"] === "2018-02"}) // Filtering
+      csv.sort(function(a, b) {
+        return new Date(a.Period).getTime() - new Date(b.Period).getTime()
+      });
+
+
+
+      data = crossfilter(csv);
+
+
+
+
+
+
+
+
+      heatrunDim = data.dimension(function(d) {
+          return [d.Short_Country, d.Short_Product, d.Date, d.MOS,d.Country,d.Product,d.AMI,d.SOH];
+        }),
+        heatrunGroup = heatrunDim.group().reduceSum(function(d) {
+          return [d.MOS];
+        });
+
+      // var colorsDomain = [0.1, 3, 6];
+      var colorsDomain = [-1,0,0.1, 3, 6];
+      // var colorss2 = ["#dddddd","#dddddd","#e34a33", "#f4a582", "#21ce55", "#72bad4"];
+      var colorss2 = ["#9297a0","#9297a0","#e34a33", "#f4a582", "#52b765", "#72bad4"];
+      console.log('hello')
+console.log($(window).width())
+console.log($(window).height())
+
+      heatChart.width(1400)
+        .height(6000)
+        .margins({
+          left: 370,
+          top: 20,
+          right: 0,
+          bottom: 20
+        })
+        .dimension(heatrunDim)
+        .group(heatrunGroup)
+        .ordering(function(d) { return d.key[1]; })
+        .keyAccessor(function(d) {
+          return d.key[0];
+        })
+        .valueAccessor(function(d) {
+          return d.key[1];
+        })
+
+
+        .title(function(d) {
+          // console.log(d);
+          return "Country:   " + d.key[4] + "\n" +
+            "Product:  " + d.key[5] + "\n" +
+            "Date:  " + format(d.key[2]) + "\n" +
+            "MOS: " + Math.round(10*d.key[3])/10;
+        })
+        .on('renderlet.label', function(chart) {
+          var text = chart.selectAll('g.box-group')
+            .selectAll('text.annotate').data(d => [d]);
+          text.exit().remove();
+          // enter attributes => anything that won't change
+          var textEnter = text.enter()
+            .append('text')
+            .attr('class', 'annotate')
+            .attr('fill','black')
+            .attr('font-size','8px')
+            .attr('font-weight', '600')
+
+          textEnter.selectAll('tspan')
+            .data(d => [(Math.round(10*d.value +0)/10).toFixed(1),'  ',d.key[4]])
+            .enter().append('tspan')
+            .attr('text-anchor', 'middle')
+            .attr('dy', 10);
+          text = textEnter.merge(text);
+          // update attributes => position and text
+          text
+            .attr('y', function() {
+              var rect = d3.select(this.parentNode).select('rect');
+              return +rect.attr('y') + rect.attr('height') / 2 - 15;
+            });
+          text.selectAll('tspan')
+            .attr('x', function() {
+              var rect = d3.select(this.parentNode.parentNode).select('rect');
+              return +rect.attr('x') + rect.attr('width') / 2;
+            })
+            .text(d => d);
+        })
+
+
+        .on('pretransition.axis', function(chart) {
+          chart.selectAll("g.cols.axis text")
+            .attr("transform", function() {
+              var coord = this.getBBox();
+              var x = coord.x + (coord.width / 2) + 20
+              y = coord.y + (coord.height / 2) + 20;
+              y = -y + 15
+              return "translate(0, " + y + " )"
+
+            })
+            .attr("style", function() {
+              return "text-anchor: middle;font-size:14px;font-family:Roboto, sans-serif"
+            })
+            chart.selectAll("g.rows.axis text")
+            .attr("style", function() {
+              return "text-anchor: end;font-size:16px;font-family:Roboto, sans-serif"
+            })
+            chart.selectAll("g.box-group")
+              .attr("transform", function() {
+                var coord = this.getBBox();
+                var x = coord.x + (coord.width / 2) + 20
+                y = coord.y + (coord.height / 2) + 20;
+                y = -y + 15
+                return "translate(0, " + y + " )"
+
+              })
+              .attr("style", function() {
+                return "text-anchor: middle;font-size:14px;font-family:Roboto, sans-serif"
+              })
+              chart.selectAll("g.rows.axis text")
+              .attr("style", function() {
+                return "text-anchor: end;font-size:16px;font-family:Roboto, sans-serif"
+              })
+        })
+
+        .colors(d3.scaleThreshold().domain(colorsDomain).range(colorss2))
+        .colorAccessor(function(d) {
+
+          if (d.key[6] <0.4 && d.key[7] >0.1){
+            return -0.5
+          } else if (d.key[7] <0.4 && d.key[6] >=0){
+            return 0.0
+          } else{
+            return d.value;
+
+          }
+          // console.log(d.key[6])
+        })
+        .on("renderlet", function(chart) {
+  chart.selectAll('rect').on("click", function(d) {
+    var empt = []
+    var send_click = JSON.stringify(d.key[4])
+    var send_click2 = JSON.stringify(d.key[5])
+    empt.push(send_click)
+    empt.push(send_click2)
+
+    console.log(empt)
+    loadPage(empt);
+  });
+});
+
+
+      // -------------------------------------------------
+
+
+      console.log('kk')
+      // var clone = heatChart.selectAll("g.cols.axis text")._parents[0]
+      // console.log(clone)
+
+
+  // var button = heatChart.selectAll("g.cols.axis text").clone();
+  // console.log(button.innerHTML)
+  // console.log(button)
+//   ('.package').html($button);
+// });
+
+
+
+// $(function(){
+//     $('.svg-container').clone().appendTo($('#heat-chart22 '));
+// });
+
+
+
+
+      dc.renderAll();
+
+      function make_x_gridlines() {
+          return d3.axisBottom(x)
+              .ticks(5)
+      }
+
+      var newLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+      newLine.setAttribute('id','line2');
+      newLine.setAttribute('x1','100');
+      newLine.setAttribute('y1','100');
+      newLine.setAttribute('x2','2000');
+      newLine.setAttribute('y2','2000');
+      newLine.setAttribute("stroke", "black")
+
+
+      function make_x_axis() {
+    return d3.svg.axis()
+        .scale(x)
+         .orient("bottom")
+         .ticks(5)
+}
+
+function make_y_axis() {
+    return d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(5)
+}
+      // $("svg").append(newLine);
+
+      $(function(){
+        $('.svg-container.dc-chart svg').clone().appendTo($('#heat-chart22beh'));
+
+          // $('div#heat-chart').clone().appendTo($('#heat-chart22beh'));
+          d3.selectAll('div#heat-chart22beh svg').attr('height','50px');
+          d3.selectAll('div#heat-chart22beh g.box-group').remove();
+          d3.selectAll('div#heat-chart22beh g.rows.axis text').remove();
+        //   d3.selectAll('div#heat-chart22beh g').attr("class", "grid")
+        //   d3.selectAll('div#heat-chart svg').append("circle").attr("cx",20).attr("cy",54).attr("r", 6).style("fill", "#e34a33")
+        //   d3.selectAll('div#heat-chart g').append("g")
+        // .attr("class", "grid")
+        // .call(make_y_axis()
+        //     .tickSize(-width, 0, 0)
+        //     .tickFormat("")
+        // )
+
+
+
+      // .attr("transform", "translate(0," + height + ")")
+      // .call(make_x_gridlines()
+      //     .tickSize('10px')
+      //     .tickFormat("")
+      // );
+
+          // d3.selectAll('div#heat-chart22beh g.cols.axis text').attr('y',null)();
+          // d3.selectAll('div#heat-chart22beh g.cols.axis text').attr('y','0')();
+          // d3.selectAll('div#heat-chart22beh g.cols.axis text').attr('transform','translate(0) rotate(45 0 0)')();
+
+
+          // d3.selectAll('div#heat-chart22beh g.cols.axis text').attr('transform','rotate(-4 0 0)')();
+
+
+
+
+      // }); //commented out originall part of d3.csv
+
+    });
+
+
+
+  </script>
+
+  <script>
+
+
+// select the svg area
+var svg = d3.select("#legend")
+
+// Handmade legend"#e34a33", "#f4a582", "#dddddd", "#72bad4"
+svg.append("circle").attr("cx",30).attr("cy",10).attr("r", 6).style("fill", "#9297a0")
+svg.append("circle").attr("cx",260).attr("cy",10).attr("r", 6).style("fill", "#e34a33")
+svg.append("circle").attr("cx",480).attr("cy",10).attr("r", 6).style("fill", "#f4a582")
+svg.append("circle").attr("cx",690).attr("cy",10).attr("r", 6).style("fill", "#52b765")
+svg.append("circle").attr("cx",880).attr("cy",10).attr("r", 6).style("fill", "#72bad4")
+
+svg.append("text").attr("x", 50).attr("y", 11).text("Unknown (AMI=0 & SOH>0)").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 280).attr("y", 11).text("Stockout (AMI>=0 & SOH=0)").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 500).attr("y", 11).text("Near Stockout (<3 MOS)").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 710).attr("y", 11).text("Adequate (3 - 6 MOS)").style("font-size", "15px").attr("alignment-baseline","middle")
+svg.append("text").attr("x", 900).attr("y", 11).text("Overstock (>6 MOS)").style("font-size", "15px").attr("alignment-baseline","middle")
+
+</script>
+
+
+</body>
+
+</html>
